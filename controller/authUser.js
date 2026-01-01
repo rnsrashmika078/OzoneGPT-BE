@@ -5,7 +5,7 @@ export async function signup(req, res) {
   try {
     const { name, email, password, confirmPassword } = req.body;
 
-    console.log(req.body);
+    console.log("Hit:sign-up");
 
     const existingUser = await prisma.user.findUnique({ where: { email } });
     if (existingUser) {
@@ -25,7 +25,7 @@ export async function signup(req, res) {
     res.cookie("token", token, {
       httpOnly: true,
       secure: false,
-      sameSite: "none",
+      sameSite: "lax",
       maxAge: 1000 * 60 * 60 * 24,
     });
 
@@ -42,6 +42,8 @@ export async function signup(req, res) {
 }
 export async function signin(req, res) {
   try {
+    console.log("Hit:sign-in");
+
     const { email, password } = req.body;
 
     const user = await prisma.user.findUnique({ where: { email } });
@@ -63,13 +65,13 @@ export async function signin(req, res) {
     res.cookie("token", token, {
       httpOnly: true,
       secure: false,
-      sameSite: "none",
+      sameSite: "lax",
       maxAge: 1000 * 60 * 60 * 24,
     });
 
     res.status(200).json({
       success: true,
-      message: "Account created successfully!",
+      message: "Successfully Logged In!",
       user: { id: user.id, name: user.name, email },
       token,
     });
@@ -80,6 +82,8 @@ export async function signin(req, res) {
 }
 export function signout(req, res) {
   try {
+    console.log("Hit:sign-out");
+
     res.clearCookie("token", {
       httpOnly: true,
       secure: false,
@@ -95,6 +99,8 @@ export function signout(req, res) {
 }
 export async function getAuthUser(req, res) {
   try {
+    console.log("Hit:authuser-get");
+
     res.status(200).json({
       success: true,
       message: "State synced!",
